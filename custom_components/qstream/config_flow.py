@@ -1,5 +1,6 @@
 """Config flow for QStream integration."""
 
+import logging
 from typing import Any
 import voluptuous as vol
 
@@ -12,6 +13,8 @@ from qstream import QStreamClient
 from qstream.exceptions import QStreamConnectionError, QStreamTimeoutError
 
 from .const import DOMAIN, CONF_HOST
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class QStreamConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -39,7 +42,8 @@ class QStreamConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["base"] = "cannot_connect"
             except QStreamTimeoutError:
                 errors["base"] = "timeout"
-            except Exception:
+            except Exception as err:
+                _LOGGER.exception("Unexpected error during QStream connection validation: %s", err)
                 errors["base"] = "unknown"
             else:
                 # Success - create entry
@@ -53,6 +57,10 @@ class QStreamConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_NAME: name,
                     },
                 )
+            finally:
+                # Clean up client resources
+                if hasattr(client, 'close'):
+                    await client.close()
 
         # Show form
         data_schema = vol.Schema(
