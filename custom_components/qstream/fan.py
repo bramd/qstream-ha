@@ -57,6 +57,7 @@ class QStreamFan(CoordinatorEntity[QStreamDataUpdateCoordinator], FanEntity):
         | FanEntityFeature.TURN_ON
         | FanEntityFeature.TURN_OFF
     )
+    _attr_speed_count = 100  # Support 0-100% granularity
 
     def __init__(
         self,
