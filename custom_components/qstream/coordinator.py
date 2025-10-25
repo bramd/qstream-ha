@@ -48,12 +48,19 @@ class QStreamDataUpdateCoordinator(DataUpdateCoordinator[QStreamData]):
         try:
             status = await self.client.get_status()
 
-            # Fetch AQI separately
+            # Fetch AQI separately - don't fail entire update if AQI fails
             air_quality = None
             try:
                 air_quality = await self.client.get_air_quality()
+                _LOGGER.debug("Fetched AQI: %s", air_quality)
+            except QStreamError as err:
+                _LOGGER.warning("Failed to fetch air quality (QStreamError): %s", err)
             except Exception as err:
-                _LOGGER.warning("Failed to fetch air quality: %s", err)
+                _LOGGER.warning(
+                    "Failed to fetch air quality (unexpected error): %s",
+                    err,
+                    exc_info=True,
+                )
 
             return QStreamData(status=status, air_quality=air_quality)
         except QStreamError as err:
