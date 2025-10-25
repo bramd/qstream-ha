@@ -36,6 +36,7 @@ class QStreamDataUpdateCoordinator(DataUpdateCoordinator[QStreamData]):
     ) -> None:
         """Initialize coordinator."""
         self.client = client
+        self._last_aqi: int | None = None  # Cache last successful AQI value
         super().__init__(
             hass,
             _LOGGER,
@@ -57,13 +58,16 @@ class QStreamDataUpdateCoordinator(DataUpdateCoordinator[QStreamData]):
 
         # Fetch AQI separately - don't fail entire update if AQI unavailable
         # Some devices may not have AQI or endpoint may be temporarily busy
-        air_quality = None
+        # Keep last known value if fetch fails (AQI changes slowly)
         try:
-            air_quality = await self.client.get_air_quality()
-            _LOGGER.debug("Fetched AQI: %s", air_quality)
+            aqi = await self.client.get_air_quality()
+            self._last_aqi = aqi  # Cache successful value
+            _LOGGER.debug("Fetched AQI: %s", aqi)
         except QStreamError as err:
-            # Log but don't raise - AQI will show as unavailable until next update
-            _LOGGER.debug("AQI not available (%s), will retry on next update", err)
+            # Keep last known AQI - it changes slowly, stale better than unknown
+            _LOGGER.debug(
+                "AQI not available (%s), using cached value: %s", err, self._last_aqi
+            )
         except Exception as err:
             _LOGGER.warning(
                 "Unexpected error fetching air quality: %s",
@@ -71,4 +75,4 @@ class QStreamDataUpdateCoordinator(DataUpdateCoordinator[QStreamData]):
                 exc_info=True,
             )
 
-        return QStreamData(status=status, air_quality=air_quality)
+        return QStreamData(status=status, air_quality=self._last_aqi)
