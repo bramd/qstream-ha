@@ -77,17 +77,17 @@ class QStreamFan(CoordinatorEntity[QStreamDataUpdateCoordinator], FanEntity):
     @property
     def is_on(self) -> bool:
         """Return true if fan is on."""
-        return self.coordinator.data.actual_flow > 0
+        return self.coordinator.data.status.actual_flow > 0
 
     @property
     def percentage(self) -> int | None:
         """Return the current speed percentage."""
-        return self.coordinator.data.actual_flow
+        return self.coordinator.data.status.actual_flow
 
     @property
     def preset_mode(self) -> str | None:
         """Return the current preset mode."""
-        current_flow = self.coordinator.data.actual_flow
+        current_flow = self.coordinator.data.status.actual_flow
         # Match current flow to cached preset percentages
         for preset_name, preset_percentage in self._preset_percentages.items():
             if abs(current_flow - preset_percentage) < 5:  # 5% tolerance
@@ -101,7 +101,7 @@ class QStreamFan(CoordinatorEntity[QStreamDataUpdateCoordinator], FanEntity):
         **kwargs: Any,
     ) -> None:
         """Turn on the fan."""
-        demand_control = self.coordinator.data.demand_control_enabled
+        demand_control = self.coordinator.data.status.demand_control_enabled
 
         if preset_mode:
             percentage = self._preset_percentages[preset_mode]
@@ -122,7 +122,7 @@ class QStreamFan(CoordinatorEntity[QStreamDataUpdateCoordinator], FanEntity):
 
     async def async_set_percentage(self, percentage: int) -> None:
         """Set the speed percentage of the fan."""
-        demand_control = self.coordinator.data.demand_control_enabled
+        demand_control = self.coordinator.data.status.demand_control_enabled
         await self.coordinator.client.set_timer(
             duration_minutes=DEFAULT_TIMER_DURATION,
             speed_percentage=percentage,

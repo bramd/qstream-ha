@@ -55,11 +55,11 @@ class QStreamDemandControlSwitch(
     @property
     def is_on(self) -> bool:
         """Return true if demand control is enabled."""
-        return self.coordinator.data.demand_control_enabled
+        return self.coordinator.data.status.demand_control_enabled
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on demand control."""
-        current_speed = self.coordinator.data.set_flow
+        current_speed = self.coordinator.data.status.set_flow
         await self.coordinator.client.set_timer(
             duration_minutes=DEFAULT_TIMER_DURATION,
             speed_percentage=current_speed,
@@ -69,7 +69,7 @@ class QStreamDemandControlSwitch(
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off demand control."""
-        current_speed = self.coordinator.data.set_flow
+        current_speed = self.coordinator.data.status.set_flow
         await self.coordinator.client.set_timer(
             duration_minutes=DEFAULT_TIMER_DURATION,
             speed_percentage=current_speed,

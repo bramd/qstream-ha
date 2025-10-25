@@ -93,20 +93,11 @@ class QStreamAirQualitySensor(QStreamSensorBase):
         """Initialize the sensor."""
         super().__init__(coordinator, entry_id, device_name)
         self._attr_unique_id = f"{entry_id}_air_quality"
-        self._aqi_value = None
-
-    async def async_update(self) -> None:
-        """Update AQI value."""
-        try:
-            self._aqi_value = await self.coordinator.client.get_air_quality()
-        except Exception as err:
-            _LOGGER.warning("Failed to fetch air quality: %s", err)
-            self._aqi_value = None
 
     @property
     def native_value(self) -> int | None:
         """Return the AQI value."""
-        return self._aqi_value
+        return self.coordinator.data.air_quality
 
 
 class QStreamFlowSensor(QStreamSensorBase):
@@ -133,7 +124,7 @@ class QStreamFlowSensor(QStreamSensorBase):
     @property
     def native_value(self) -> int:
         """Return the flow percentage."""
-        return getattr(self.coordinator.data, self._field)
+        return getattr(self.coordinator.data.status, self._field)
 
 
 class QStreamTimerRemainingSensor(QStreamSensorBase):
@@ -157,7 +148,7 @@ class QStreamTimerRemainingSensor(QStreamSensorBase):
     @property
     def native_value(self) -> int | None:
         """Return timer remaining minutes."""
-        return self.coordinator.data.timer_remaining_minutes
+        return self.coordinator.data.status.timer_remaining_minutes
 
 
 class QStreamScheduleModeSensor(QStreamSensorBase):
@@ -179,8 +170,8 @@ class QStreamScheduleModeSensor(QStreamSensorBase):
     @property
     def native_value(self) -> str | None:
         """Return schedule mode."""
-        if self.coordinator.data.schedule_mode:
-            return self.coordinator.data.schedule_mode.value
+        if self.coordinator.data.status.schedule_mode:
+            return self.coordinator.data.status.schedule_mode.value
         return None
 
 
@@ -205,7 +196,7 @@ class QStreamScheduleRemainingSensor(QStreamSensorBase):
     @property
     def native_value(self) -> int | None:
         """Return schedule remaining minutes."""
-        return self.coordinator.data.schedule_remaining_minutes
+        return self.coordinator.data.status.schedule_remaining_minutes
 
 
 class QStreamBinarySensorBase(
@@ -251,7 +242,7 @@ class QStreamValveBinarySensor(QStreamBinarySensorBase):
     @property
     def is_on(self) -> bool:
         """Return true if valve is open."""
-        return self.coordinator.data.valve_open
+        return self.coordinator.data.status.valve_open
 
 
 class QStreamTimerActiveBinarySensor(QStreamBinarySensorBase):
@@ -273,7 +264,7 @@ class QStreamTimerActiveBinarySensor(QStreamBinarySensorBase):
     @property
     def is_on(self) -> bool:
         """Return true if timer is active."""
-        return self.coordinator.data.timer_active
+        return self.coordinator.data.status.timer_active
 
 
 class QStreamScheduleEnabledBinarySensor(QStreamBinarySensorBase):
@@ -295,4 +286,4 @@ class QStreamScheduleEnabledBinarySensor(QStreamBinarySensorBase):
     @property
     def is_on(self) -> bool:
         """Return true if schedule is enabled."""
-        return self.coordinator.data.schedule_enabled
+        return self.coordinator.data.status.schedule_enabled
