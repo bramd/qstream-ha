@@ -1,0 +1,22 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "QStream Ventilation Fan",
+        "description": "Configure your QStream device",
+        "data": {
+          "host": "Device IP or Hostname",
+          "name": "Friendly Name (optional)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to device. Check IP address and network connection.",
+      "timeout": "Connection timeout. Device may be offline or unreachable.",
+      "unknown": "Unexpected error occurred. Check logs for details."
+    },
+    "abort": {
+      "already_configured": "Device is already configured"
+    }
+  }
+}
