@@ -65,7 +65,7 @@ class QStreamDemandControlSwitch(
             speed_percentage=current_speed,
             demand_control=True,
         )
-        await self.coordinator.async_request_refresh()
+        await self.coordinator.async_refresh()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off demand control."""
@@ -75,4 +75,4 @@ class QStreamDemandControlSwitch(
             speed_percentage=current_speed,
             demand_control=False,
         )
-        await self.coordinator.async_request_refresh()
+        await self.coordinator.async_refresh()

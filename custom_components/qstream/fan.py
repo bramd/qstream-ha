@@ -117,12 +117,12 @@ class QStreamFan(CoordinatorEntity[QStreamDataUpdateCoordinator], FanEntity):
             speed_percentage=percentage,
             demand_control=demand_control,
         )
-        await self.coordinator.async_request_refresh()
+        await self.coordinator.async_refresh()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off the fan."""
         await self.coordinator.client.cancel_timer()
-        await self.coordinator.async_request_refresh()
+        await self.coordinator.async_refresh()
 
     async def async_set_percentage(self, percentage: int) -> None:
         """Set the speed percentage of the fan."""
@@ -132,7 +132,7 @@ class QStreamFan(CoordinatorEntity[QStreamDataUpdateCoordinator], FanEntity):
             speed_percentage=percentage,
             demand_control=demand_control,
         )
-        await self.coordinator.async_request_refresh()
+        await self.coordinator.async_refresh()
 
     async def async_set_preset_mode(self, preset_mode: str) -> None:
         """Set the preset mode of the fan."""
