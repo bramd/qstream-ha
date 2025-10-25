@@ -1,5 +1,6 @@
 """Fan platform for QStream integration."""
 
+import asyncio
 import logging
 from typing import Any
 
@@ -117,11 +118,15 @@ class QStreamFan(CoordinatorEntity[QStreamDataUpdateCoordinator], FanEntity):
             speed_percentage=percentage,
             demand_control=demand_control,
         )
+        # Small delay to let device process command before fetching state
+        await asyncio.sleep(0.5)
         await self.coordinator.async_refresh()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off the fan."""
         await self.coordinator.client.cancel_timer()
+        # Small delay to let device process command before fetching state
+        await asyncio.sleep(0.5)
         await self.coordinator.async_refresh()
 
     async def async_set_percentage(self, percentage: int) -> None:
@@ -132,6 +137,8 @@ class QStreamFan(CoordinatorEntity[QStreamDataUpdateCoordinator], FanEntity):
             speed_percentage=percentage,
             demand_control=demand_control,
         )
+        # Small delay to let device process command before fetching state
+        await asyncio.sleep(0.5)
         await self.coordinator.async_refresh()
 
     async def async_set_preset_mode(self, preset_mode: str) -> None:

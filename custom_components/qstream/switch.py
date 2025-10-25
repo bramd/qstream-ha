@@ -1,5 +1,6 @@
 """Switch platform for QStream integration."""
 
+import asyncio
 import logging
 from typing import Any
 
@@ -65,6 +66,8 @@ class QStreamDemandControlSwitch(
             speed_percentage=current_speed,
             demand_control=True,
         )
+        # Small delay to let device process command before fetching state
+        await asyncio.sleep(0.5)
         await self.coordinator.async_refresh()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
@@ -75,4 +78,6 @@ class QStreamDemandControlSwitch(
             speed_percentage=current_speed,
             demand_control=False,
         )
+        # Small delay to let device process command before fetching state
+        await asyncio.sleep(0.5)
         await self.coordinator.async_refresh()
