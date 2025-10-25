@@ -45,7 +45,7 @@ Home Assistant custom integration for BUVA QStream 2.0 WiFi-enabled ventilation 
 2. Click on "Integrations"
 3. Click the three dots menu (top right)
 4. Select "Custom repositories"
-5. Add repository URL: `https://github.com/bramton/qstream-ha`
+5. Add repository URL: `https://github.com/bramd/qstream-ha`
 6. Category: Integration
 7. Click "Add"
 8. Search for "QStream Ventilation Fan"
@@ -161,8 +161,8 @@ mypy custom_components/qstream/
 
 ## Support
 
-- Report bugs: [GitHub Issues](https://github.com/bramton/qstream-ha/issues)
-- Feature requests: [GitHub Discussions](https://github.com/bramton/qstream-ha/discussions)
+- Report bugs: [GitHub Issues](https://github.com/bramd/qstream-ha/issues)
+- Feature requests: [GitHub Discussions](https://github.com/bramd/qstream-ha/discussions)
 
 ## License
 
