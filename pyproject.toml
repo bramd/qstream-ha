@@ -12,7 +12,7 @@ dev = [
     "mypy>=1.18.2",
     "pytest>=8.3.5",
     "pytest-homeassistant-custom-component>=0.13.236",
-    "qstream>=0.1.0",
+    "qstream>=0.2.0",
     "ruff>=0.14.2",
 ]
 

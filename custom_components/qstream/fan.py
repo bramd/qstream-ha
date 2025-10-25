@@ -12,8 +12,10 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
+    BOOST_TIMER_DURATION,
     DEFAULT_TIMER_DURATION,
     DOMAIN,
+    PRESET_MODE_BOOST,
     PRESET_MODES,
     PRESET_TO_LEVEL,
 )
@@ -39,8 +41,8 @@ async def async_setup_entry(
             preset_percentages[preset_name] = percentage
         except Exception as err:
             _LOGGER.warning("Failed to query level %s: %s", level_index, err)
-            # Default to evenly spaced percentages
-            preset_percentages[preset_name] = level_index * 25
+            # Default to evenly spaced percentages (0=20%, 1=40%, 2=60%, 3=80%, 4=100%)
+            preset_percentages[preset_name] = (level_index + 1) * 20
 
     async_add_entities(
         [QStreamFan(coordinator, entry.entry_id, name, preset_percentages)]
@@ -108,13 +110,19 @@ class QStreamFan(CoordinatorEntity[QStreamDataUpdateCoordinator], FanEntity):
         """Turn on the fan."""
         demand_control = self.coordinator.data.status.demand_control_enabled
 
+        # Determine timer duration based on preset mode
+        if preset_mode == PRESET_MODE_BOOST:
+            duration = BOOST_TIMER_DURATION
+        else:
+            duration = DEFAULT_TIMER_DURATION
+
         if preset_mode:
             percentage = self._preset_percentages[preset_mode]
         elif percentage is None:
             percentage = 50  # Default
 
         await self.coordinator.client.set_timer(
-            duration_minutes=DEFAULT_TIMER_DURATION,
+            duration_minutes=duration,
             speed_percentage=percentage,
             demand_control=demand_control,
         )

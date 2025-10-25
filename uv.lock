@@ -3121,15 +3121,15 @@ wheels = [
 
 [[package]]
 name = "qstream"
-version = "0.1.0"
+version = "0.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp", version = "3.11.16", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13.2'" },
     { name = "aiohttp", version = "3.12.15", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13.2'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/58/e0/f5e0a85844fd1e1efe7bdd0aa97bbeaafb5f3e96bca9b2a530f1273677a7/qstream-0.1.0.tar.gz", hash = "sha256:46f92d5b3513c5baf121b75126f8eec383ae812f225f461bd64de2bcca1bd304", size = 79890, upload-time = "2025-10-25T12:37:26.706Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/3c/bc/145e8bcfb816683693c62bf1f474b545dceff2ca90a3181c12f5beafe024/qstream-0.2.0.tar.gz", hash = "sha256:a40a7204ce2732763da17f4197a3df863dfcc94e619420f138eedc133b9a87a6", size = 79930, upload-time = "2025-10-25T20:56:11.252Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6b/23/19afd15832ce6226b6a852eed4e925acae1bf79b0c0f36fbedfc49d252fc/qstream-0.1.0-py3-none-any.whl", hash = "sha256:3188e9bcf7f80fa76bbe6b2469b89518a8b98d3d60fbb07c59946aeb8c3fb805", size = 7873, upload-time = "2025-10-25T12:37:25.417Z" },
+    { url = "https://files.pythonhosted.org/packages/ce/7f/948c44b1b85f7cc7bfa6ba316842270de815f864dda8833f3a06232642d9/qstream-0.2.0-py3-none-any.whl", hash = "sha256:12410ed8b3b7a68bc23dcea96b7b4ede12dcc4ed9c013d8aef0993953e5cadd3", size = 7874, upload-time = "2025-10-25T20:56:09.726Z" },
 ]
 
 [[package]]
@@ -3158,7 +3158,7 @@ dev = [
     { name = "mypy", specifier = ">=1.18.2" },
     { name = "pytest", specifier = ">=8.3.5" },
     { name = "pytest-homeassistant-custom-component", specifier = ">=0.13.236" },
-    { name = "qstream", specifier = ">=0.1.0" },
+    { name = "qstream", specifier = ">=0.2.0" },
     { name = "ruff", specifier = ">=0.14.2" },
 ]
 
