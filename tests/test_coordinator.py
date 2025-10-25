@@ -16,6 +16,7 @@ def mock_client():
     """Create mock QStreamClient."""
     client = MagicMock()
     client.get_status = AsyncMock()
+    client.get_air_quality = AsyncMock(return_value=50)
     return client
 
 
@@ -41,9 +42,9 @@ async def test_coordinator_update_success(hass: HomeAssistant, mock_client):
         hass, mock_client, update_interval=timedelta(seconds=30)
     )
 
-    await coordinator.async_config_entry_first_refresh()
+    await coordinator.async_refresh()
 
-    assert coordinator.data == mock_status
+    assert coordinator.data.status == mock_status
     assert mock_client.get_status.called
 
 
@@ -56,4 +57,4 @@ async def test_coordinator_update_failure(hass: HomeAssistant, mock_client):
     )
 
     with pytest.raises(UpdateFailed):
-        await coordinator.async_config_entry_first_refresh()
+        await coordinator.async_refresh()
