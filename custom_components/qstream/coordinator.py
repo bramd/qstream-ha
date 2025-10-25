@@ -44,32 +44,31 @@ class QStreamDataUpdateCoordinator(DataUpdateCoordinator[QStreamData]):
         )
 
     async def _async_update_data(self) -> QStreamData:
-        """Fetch data from API endpoint."""
+        """Fetch data from API endpoint.
+
+        Note: AQI failures are logged but don't fail the entire update,
+        since fan control (status) is more critical than air quality data.
+        The coordinator will retry on the next interval (30s).
+        """
         try:
             status = await self.client.get_status()
-
-            # Fetch AQI separately - don't fail entire update if AQI fails
-            # Retry once on 503 errors as device may be temporarily busy
-            air_quality = None
-            for attempt in range(2):
-                try:
-                    air_quality = await self.client.get_air_quality()
-                    _LOGGER.debug("Fetched AQI: %s", air_quality)
-                    break  # Success, exit retry loop
-                except QStreamError as err:
-                    if attempt == 0 and "503" in str(err):
-                        _LOGGER.debug("AQI returned 503, retrying once...")
-                        continue  # Retry on 503
-                    _LOGGER.warning("Failed to fetch air quality: %s", err)
-                    break  # Don't retry other errors
-                except Exception as err:
-                    _LOGGER.warning(
-                        "Failed to fetch air quality (unexpected error): %s",
-                        err,
-                        exc_info=True,
-                    )
-                    break  # Don't retry unexpected errors
-
-            return QStreamData(status=status, air_quality=air_quality)
         except QStreamError as err:
             raise UpdateFailed(f"Error communicating with device: {err}") from err
+
+        # Fetch AQI separately - don't fail entire update if AQI unavailable
+        # Some devices may not have AQI or endpoint may be temporarily busy
+        air_quality = None
+        try:
+            air_quality = await self.client.get_air_quality()
+            _LOGGER.debug("Fetched AQI: %s", air_quality)
+        except QStreamError as err:
+            # Log but don't raise - AQI will show as unavailable until next update
+            _LOGGER.debug("AQI not available (%s), will retry on next update", err)
+        except Exception as err:
+            _LOGGER.warning(
+                "Unexpected error fetching air quality: %s",
+                err,
+                exc_info=True,
+            )
+
+        return QStreamData(status=status, air_quality=air_quality)
