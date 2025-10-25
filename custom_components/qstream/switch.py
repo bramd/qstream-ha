@@ -1,7 +1,7 @@
 """Switch platform for QStream integration."""
 
-from typing import Any
 import logging
+from typing import Any
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
@@ -10,7 +10,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, DEFAULT_TIMER_DURATION
+from .const import DEFAULT_TIMER_DURATION, DOMAIN
 from .coordinator import QStreamDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)

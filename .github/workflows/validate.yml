@@ -1,0 +1,41 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Validate manifest
+        run: |
+          python -c "import json; json.load(open('custom_components/qstream/manifest.json'))"
+
+      - name: Validate HACS
+        run: |
+          python -c "import json; json.load(open('hacs.json'))"
+
+      - name: Run ruff
+        run: uv run ruff check custom_components/qstream/
+
+      - name: Run mypy
+        run: uv run mypy custom_components/qstream/
+
+      - name: Run tests
+        run: uv run pytest tests/ -v

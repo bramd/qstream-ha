@@ -1,7 +1,7 @@
 """Data update coordinator for QStream integration."""
 
-from datetime import timedelta
 import logging
+from datetime import timedelta
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import (
@@ -9,9 +9,9 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 
-from qstream import QStreamClient
-from qstream.models import QStreamStatus
-from qstream.exceptions import QStreamError
+from qstream import QStreamClient  # type: ignore[import-untyped,attr-defined]
+from qstream.exceptions import QStreamError  # type: ignore[import-untyped]
+from qstream.models import QStreamStatus  # type: ignore[import-untyped]
 
 _LOGGER = logging.getLogger(__name__)
 

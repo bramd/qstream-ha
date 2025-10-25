@@ -1,7 +1,7 @@
 """Fan platform for QStream integration."""
 
-from typing import Any
 import logging
+from typing import Any
 
 from homeassistant.components.fan import FanEntity, FanEntityFeature
 from homeassistant.config_entries import ConfigEntry
@@ -11,10 +11,10 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
+    DEFAULT_TIMER_DURATION,
     DOMAIN,
     PRESET_MODES,
     PRESET_TO_LEVEL,
-    DEFAULT_TIMER_DURATION,
 )
 from .coordinator import QStreamDataUpdateCoordinator
 
@@ -41,7 +41,9 @@ async def async_setup_entry(
             # Default to evenly spaced percentages
             preset_percentages[preset_name] = level_index * 25
 
-    async_add_entities([QStreamFan(coordinator, entry.entry_id, name, preset_percentages)])
+    async_add_entities(
+        [QStreamFan(coordinator, entry.entry_id, name, preset_percentages)]
+    )
 
 
 class QStreamFan(CoordinatorEntity[QStreamDataUpdateCoordinator], FanEntity):

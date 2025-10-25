@@ -2,17 +2,17 @@
 
 import logging
 from typing import Any
-import voluptuous as vol
 
+import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_NAME
-from homeassistant.data_entry_flow import FlowResult
+from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from qstream import QStreamClient
 from qstream.exceptions import QStreamConnectionError, QStreamTimeoutError
 
-from .const import DOMAIN, CONF_HOST
+from .const import CONF_HOST, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ class QStreamConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Handle the initial step."""
         errors: dict[str, str] = {}
 
@@ -43,7 +43,9 @@ class QStreamConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except QStreamTimeoutError:
                 errors["base"] = "timeout"
             except Exception as err:
-                _LOGGER.exception("Unexpected error during QStream connection validation: %s", err)
+                _LOGGER.exception(
+                    "Unexpected error during QStream connection validation: %s", err
+                )
                 errors["base"] = "unknown"
             else:
                 # Success - create entry

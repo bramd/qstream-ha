@@ -2,14 +2,14 @@
 
 import logging
 
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntity,
+)
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
     SensorStateClass,
-)
-from homeassistant.components.binary_sensor import (
-    BinarySensorEntity,
-    BinarySensorDeviceClass,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_NAME, PERCENTAGE, UnitOfTime
@@ -37,9 +37,13 @@ async def async_setup_entry(
         # Primary sensor
         QStreamAirQualitySensor(coordinator, entry.entry_id, name),
         # Diagnostic sensors
-        QStreamFlowSensor(coordinator, entry.entry_id, name, "analog_flow", "Analog Flow"),
+        QStreamFlowSensor(
+            coordinator, entry.entry_id, name, "analog_flow", "Analog Flow"
+        ),
         QStreamFlowSensor(coordinator, entry.entry_id, name, "set_flow", "Set Flow"),
-        QStreamFlowSensor(coordinator, entry.entry_id, name, "actual_flow", "Actual Flow"),
+        QStreamFlowSensor(
+            coordinator, entry.entry_id, name, "actual_flow", "Actual Flow"
+        ),
         QStreamTimerRemainingSensor(coordinator, entry.entry_id, name),
         QStreamScheduleModeSensor(coordinator, entry.entry_id, name),
         QStreamScheduleRemainingSensor(coordinator, entry.entry_id, name),
@@ -151,7 +155,7 @@ class QStreamTimerRemainingSensor(QStreamSensorBase):
         self._attr_unique_id = f"{entry_id}_timer_remaining"
 
     @property
-    def native_value(self) -> int:
+    def native_value(self) -> int | None:
         """Return timer remaining minutes."""
         return self.coordinator.data.timer_remaining_minutes
 
@@ -173,9 +177,11 @@ class QStreamScheduleModeSensor(QStreamSensorBase):
         self._attr_unique_id = f"{entry_id}_schedule_mode"
 
     @property
-    def native_value(self) -> str:
+    def native_value(self) -> str | None:
         """Return schedule mode."""
-        return self.coordinator.data.schedule_mode.value
+        if self.coordinator.data.schedule_mode:
+            return self.coordinator.data.schedule_mode.value
+        return None
 
 
 class QStreamScheduleRemainingSensor(QStreamSensorBase):
@@ -197,7 +203,7 @@ class QStreamScheduleRemainingSensor(QStreamSensorBase):
         self._attr_unique_id = f"{entry_id}_schedule_remaining"
 
     @property
-    def native_value(self) -> int:
+    def native_value(self) -> int | None:
         """Return schedule remaining minutes."""
         return self.coordinator.data.schedule_remaining_minutes
 

@@ -1,7 +1,7 @@
 [project]
 name = "qstream-ha"
 version = "0.1.0"
-description = "Add your description here"
+description = "Home Assistant integration for QStream ventilation fans"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []
@@ -15,3 +15,19 @@ dev = [
     "qstream>=0.1.0",
     "ruff>=0.14.2",
 ]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "F",  # pyflakes
+    "I",  # isort
+]
+
+[tool.mypy]
+python_version = "3.13"
+ignore_missing_imports = true
+strict = false

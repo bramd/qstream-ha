@@ -1,16 +1,16 @@
 """The QStream integration."""
 
-from datetime import timedelta
 import logging
+from datetime import timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from qstream import QStreamClient
+from qstream import QStreamClient  # type: ignore[import-untyped,attr-defined]
 
-from .const import DOMAIN, CONF_HOST, UPDATE_INTERVAL_SECONDS
+from .const import CONF_HOST, DOMAIN, UPDATE_INTERVAL_SECONDS
 from .coordinator import QStreamDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
