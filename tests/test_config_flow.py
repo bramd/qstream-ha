@@ -10,6 +10,7 @@ from custom_components.qstream.const import DOMAIN, CONF_HOST
 from qstream.exceptions import QStreamConnectionError, QStreamTimeoutError
 
 
+@pytest.mark.asyncio
 async def test_form_user_success(hass, mock_qstream_client):
     """Test successful user-initiated config flow."""
     # Start config flow
@@ -33,6 +34,7 @@ async def test_form_user_success(hass, mock_qstream_client):
     }
 
 
+@pytest.mark.asyncio
 async def test_form_connection_error(hass, mock_qstream_client):
     """Test config flow handles connection error."""
     mock_qstream_client.get_status.side_effect = QStreamConnectionError("Cannot connect")
@@ -50,6 +52,7 @@ async def test_form_connection_error(hass, mock_qstream_client):
     assert result["errors"] == {"base": "cannot_connect"}
 
 
+@pytest.mark.asyncio
 async def test_form_timeout_error(hass, mock_qstream_client):
     """Test config flow handles timeout error."""
     mock_qstream_client.get_status.side_effect = QStreamTimeoutError("Timeout")
@@ -67,6 +70,7 @@ async def test_form_timeout_error(hass, mock_qstream_client):
     assert result["errors"] == {"base": "timeout"}
 
 
+@pytest.mark.asyncio
 async def test_form_unknown_error(hass, mock_qstream_client):
     """Test config flow handles unknown error."""
     mock_qstream_client.get_status.side_effect = Exception("Unknown")

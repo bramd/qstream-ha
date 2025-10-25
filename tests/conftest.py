@@ -10,14 +10,6 @@ def mock_qstream_client():
     """Mock QStreamClient."""
     with patch("custom_components.qstream.config_flow.QStreamClient") as mock:
         client = mock.return_value
-        client.get_status = AsyncMock()
+        client.get_status = AsyncMock(return_value=None)
         client.close = AsyncMock()
         yield client
-
-
-@pytest.fixture
-async def hass():
-    """Home Assistant test fixture."""
-    # pytest-homeassistant-custom-component provides this
-    # Just document for clarity
-    pass
