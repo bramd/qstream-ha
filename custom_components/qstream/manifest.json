@@ -1,0 +1,12 @@
+{
+  "domain": "qstream",
+  "name": "QStream Ventilation Fan",
+  "codeowners": ["@bram"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/bramton/qstream-ha",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/bramton/qstream-ha/issues",
+  "requirements": ["qstream>=0.1.0"],
+  "version": "0.1.0"
+}
