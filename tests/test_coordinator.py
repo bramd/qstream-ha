@@ -56,5 +56,6 @@ async def test_coordinator_update_failure(hass: HomeAssistant, mock_client):
         hass, mock_client, update_interval=timedelta(seconds=30)
     )
 
-    with pytest.raises(UpdateFailed):
-        await coordinator.async_refresh()
+    # async_refresh() doesn't raise, it sets last_update_success to False
+    await coordinator.async_refresh()
+    assert coordinator.last_update_success is False
