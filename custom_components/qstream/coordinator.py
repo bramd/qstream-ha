@@ -49,18 +49,26 @@ class QStreamDataUpdateCoordinator(DataUpdateCoordinator[QStreamData]):
             status = await self.client.get_status()
 
             # Fetch AQI separately - don't fail entire update if AQI fails
+            # Retry once on 503 errors as device may be temporarily busy
             air_quality = None
-            try:
-                air_quality = await self.client.get_air_quality()
-                _LOGGER.debug("Fetched AQI: %s", air_quality)
-            except QStreamError as err:
-                _LOGGER.warning("Failed to fetch air quality (QStreamError): %s", err)
-            except Exception as err:
-                _LOGGER.warning(
-                    "Failed to fetch air quality (unexpected error): %s",
-                    err,
-                    exc_info=True,
-                )
+            for attempt in range(2):
+                try:
+                    air_quality = await self.client.get_air_quality()
+                    _LOGGER.debug("Fetched AQI: %s", air_quality)
+                    break  # Success, exit retry loop
+                except QStreamError as err:
+                    if attempt == 0 and "503" in str(err):
+                        _LOGGER.debug("AQI returned 503, retrying once...")
+                        continue  # Retry on 503
+                    _LOGGER.warning("Failed to fetch air quality: %s", err)
+                    break  # Don't retry other errors
+                except Exception as err:
+                    _LOGGER.warning(
+                        "Failed to fetch air quality (unexpected error): %s",
+                        err,
+                        exc_info=True,
+                    )
+                    break  # Don't retry unexpected errors
 
             return QStreamData(status=status, air_quality=air_quality)
         except QStreamError as err:
