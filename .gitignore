@@ -26,3 +26,4 @@ home-assistant_v2.db
 # OS
 .DS_Store
 Thumbs.db
+.worktrees/
