@@ -2,21 +2,73 @@
   "config": {
     "step": {
       "user": {
-        "title": "QStream Ventilation Fan",
-        "description": "Configure your QStream device",
+        "title": "Set up QStream",
+        "description": "Enter the IP address or hostname of your QStream device",
         "data": {
-          "host": "Device IP or Hostname",
-          "name": "Friendly Name (optional)"
+          "host": "Host"
         }
       }
     },
     "error": {
-      "cannot_connect": "Failed to connect to device. Check IP address and network connection.",
-      "timeout": "Connection timeout. Device may be offline or unreachable.",
-      "unknown": "Unexpected error occurred. Check logs for details."
+      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+      "timeout": "Connection timed out",
+      "unknown": "[%key:common::config_flow::error::unknown%]"
     },
     "abort": {
-      "already_configured": "Device is already configured"
+      "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+    }
+  },
+  "entity": {
+    "fan": {
+      "qstream": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "low": "[%key:common::state::low%]",
+              "medium": "[%key:common::state::medium%]",
+              "high": "[%key:common::state::high%]",
+              "turbo": "Turbo",
+              "boost": "Boost"
+            }
+          }
+        }
+      }
+    },
+    "sensor": {
+      "air_quality_index": {
+        "name": "Air Quality Index"
+      },
+      "analog_flow": {
+        "name": "Analog Flow"
+      },
+      "set_flow": {
+        "name": "Set Flow"
+      },
+      "actual_flow": {
+        "name": "Actual Flow"
+      },
+      "timer_remaining": {
+        "name": "Timer Remaining"
+      },
+      "schedule_remaining": {
+        "name": "Schedule Remaining"
+      }
+    },
+    "switch": {
+      "demand_control": {
+        "name": "Demand Control"
+      }
+    },
+    "binary_sensor": {
+      "valve": {
+        "name": "Valve"
+      },
+      "timer_active": {
+        "name": "Timer Active"
+      },
+      "schedule_enabled": {
+        "name": "Schedule Enabled"
+      }
     }
   }
 }
