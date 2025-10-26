@@ -1,0 +1,54 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "QStream instellen",
+        "description": "Voer het IP-adres of de hostnaam van je QStream apparaat in",
+        "data": {
+          "host": "Host"
+        }
+      }
+    },
+    "error": {
+      "timeout": "Verbindingstime-out"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "air_quality_index": {
+        "name": "Luchtkwaliteitsindex"
+      },
+      "analog_flow": {
+        "name": "Analoge flow"
+      },
+      "set_flow": {
+        "name": "Ingestelde flow"
+      },
+      "actual_flow": {
+        "name": "Werkelijke flow"
+      },
+      "timer_remaining": {
+        "name": "Timer resterend"
+      },
+      "schedule_remaining": {
+        "name": "Schema resterend"
+      }
+    },
+    "switch": {
+      "demand_control": {
+        "name": "Vraaggestuurde regeling"
+      }
+    },
+    "binary_sensor": {
+      "valve": {
+        "name": "Klep"
+      },
+      "timer_active": {
+        "name": "Timer actief"
+      },
+      "schedule_enabled": {
+        "name": "Schema ingeschakeld"
+      }
+    }
+  }
+}
