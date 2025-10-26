@@ -141,6 +141,17 @@ Preset modes map to device levels 1-4, which are user-configurable on the device
 
 ## Development
 
+### Claude Code Skills
+
+This repository includes project-specific skills for Claude Code to help with development workflows.
+
+**Setup:** See [.claude/README.md](.claude/README.md) for installation instructions.
+
+**Available skills:**
+- `/qstream:cutting-a-release` - Automate releases with safety checks and version management
+
+See [docs/skills/README.md](docs/skills/README.md) for detailed documentation.
+
 ### Running Tests
 
 ```bash

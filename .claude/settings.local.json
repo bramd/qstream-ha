@@ -22,7 +22,14 @@
       "Bash(python -m py_compile:*)",
       "Bash(python:*)",
       "Bash(uv run ruff:*)",
-      "Bash(uv run mypy:*)"
+      "Bash(uv run mypy:*)",
+      "Bash(git push:*)",
+      "WebSearch",
+      "Bash(gh run list:*)",
+      "Bash(gh release:*)",
+      "Bash(gh run view:*)",
+      "Bash(git fetch:*)",
+      "Bash(git rev-list:*)"
     ],
     "deny": [],
     "ask": []

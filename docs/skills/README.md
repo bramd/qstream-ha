@@ -2,11 +2,15 @@
 
 This directory documents project-specific skills for working with the QStream Home Assistant integration.
 
+## Setup
+
+See [.claude/README.md](../../.claude/README.md) for instructions on installing these skills in your Claude Code environment.
+
 ## Available Skills
 
 ### `/qstream:cutting-a-release`
 
-**Location:** `~/.claude/commands/qstream/cutting-a-release.md`
+**Location:** `.claude/commands/qstream/cutting-a-release.md` (in this repo)
 
 **Purpose:** Automate QStream integration releases with safety checks and atomic workflow.
 
