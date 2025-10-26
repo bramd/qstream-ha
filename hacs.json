@@ -1,5 +1,3 @@
 {
-  "name": "QStream Ventilation Fan",
-  "render_readme": true,
-  "domains": ["fan", "sensor", "switch"]
+  "name": "QStream Ventilation Fan"
 }
