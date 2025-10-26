@@ -37,7 +37,9 @@ async def test_form_user_success(hass, mock_qstream_client):
 @pytest.mark.asyncio
 async def test_form_connection_error(hass, mock_qstream_client):
     """Test config flow handles connection error."""
-    mock_qstream_client.get_status.side_effect = QStreamConnectionError("Cannot connect")
+    mock_qstream_client.get_status.side_effect = QStreamConnectionError(
+        "Cannot connect"
+    )
 
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": config_entries.SOURCE_USER}
