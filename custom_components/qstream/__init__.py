@@ -10,6 +10,7 @@ from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from qstream import QStreamClient  # type: ignore[import-untyped,attr-defined]
+from qstream.exceptions import QStreamError  # type: ignore[import-untyped]
 
 from .const import CONF_HOST, DOMAIN, UPDATE_INTERVAL_SECONDS
 from .coordinator import QStreamDataUpdateCoordinator
@@ -56,7 +57,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                         # Small delay to let device process command
                         await asyncio.sleep(0.5)
                         await coord.async_refresh()
-                    except Exception as err:
+                    except QStreamError as err:
                         _LOGGER.error("Failed to clear timer: %s", err)
 
         hass.services.async_register(
@@ -75,5 +76,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
+
+        # Unregister services when last entry is removed
+        if not hass.data[DOMAIN]:
+            hass.services.async_remove(DOMAIN, SERVICE_CLEAR_TIMER)
 
     return unload_ok
