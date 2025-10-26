@@ -59,9 +59,10 @@ You should now be able to use:
 
 ## Available Skills
 
-- **`/qstream:cutting-a-release`** - Automate releases with safety checks, version management, and GitHub Release creation
-
-See [docs/skills/README.md](../docs/skills/README.md) for detailed documentation of each skill.
+See [docs/skills/README.md](../docs/skills/README.md) for detailed documentation of available skills, including:
+- What each skill does
+- When to use it
+- Key features and usage examples
 
 ## Contributing Skills
 

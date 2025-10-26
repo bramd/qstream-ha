@@ -1,10 +1,8 @@
 # QStream Claude Code Skills
 
-This directory documents project-specific skills for working with the QStream Home Assistant integration.
+Project-specific skills for working with the QStream Home Assistant integration.
 
-## Setup
-
-See [.claude/README.md](../../.claude/README.md) for instructions on installing these skills in your Claude Code environment.
+**Installation:** See [../../.claude/README.md](../../.claude/README.md) for setup instructions.
 
 ## Available Skills
 
