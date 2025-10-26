@@ -50,5 +50,11 @@
         "name": "Schema ingeschakeld"
       }
     }
+  },
+  "services": {
+    "clear_timer": {
+      "name": "Timer wissen",
+      "description": "Wist de actieve timer en laat de ventilator terugkeren naar het basisprogramma (vraagregeling/AQI-regulering). Deze service is idempotent en slaagt zelfs als er momenteel geen timer actief is."
+    }
   }
 }
