@@ -27,3 +27,6 @@ home-assistant_v2.db
 .DS_Store
 Thumbs.db
 .worktrees/
+
+# Claude
+.claude/settings.local.json
