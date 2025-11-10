@@ -4,9 +4,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from homeassistant.core import HomeAssistant
-from homeassistant.setup import async_setup_component
+from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.qstream.const import DOMAIN
+from custom_components.qstream.const import CONF_HOST, DOMAIN
 
 
 @pytest.fixture
@@ -25,16 +25,16 @@ async def test_clear_timer_service_registered(hass: HomeAssistant, mock_client):
         "custom_components.qstream.QStreamClient",
         return_value=mock_client,
     ):
-        # Set up integration with mock config entry
-        assert await async_setup_component(
-            hass,
-            DOMAIN,
-            {
-                DOMAIN: {
-                    "host": "192.168.1.100",
-                }
-            },
+        # Create and add mock config entry
+        entry = MockConfigEntry(
+            domain=DOMAIN,
+            data={CONF_HOST: "192.168.1.100"},
+            entry_id="test_entry",
         )
+        entry.add_to_hass(hass)
+
+        # Set up the integration
+        await hass.config_entries.async_setup(entry.entry_id)
         await hass.async_block_till_done()
 
     # Verify service is registered
@@ -51,27 +51,34 @@ async def test_clear_timer_service_calls_cancel(hass: HomeAssistant, mock_client
         patch(
             "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator.async_config_entry_first_refresh"
         ),
+        patch(
+            "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator.async_refresh"
+        ) as mock_refresh,
     ):
-        # Set up integration
-        entry = MagicMock()
-        entry.data = {"host": "192.168.1.100"}
-        entry.entry_id = "test_entry"
+        # Create and add mock config entry
+        entry = MockConfigEntry(
+            domain=DOMAIN,
+            data={CONF_HOST: "192.168.1.100"},
+            entry_id="test_entry",
+        )
+        entry.add_to_hass(hass)
 
-        from custom_components.qstream import async_setup_entry
-
-        await async_setup_entry(hass, entry)
+        # Set up the integration
+        await hass.config_entries.async_setup(entry.entry_id)
         await hass.async_block_till_done()
 
-    # Call service
-    await hass.services.async_call(
-        DOMAIN,
-        "clear_timer",
-        {},
-        blocking=True,
-    )
+        # Call service
+        await hass.services.async_call(
+            DOMAIN,
+            "clear_timer",
+            {},
+            blocking=True,
+        )
 
     # Verify cancel_timer was called
     mock_client.cancel_timer.assert_called_once()
+    # Verify coordinator refresh was called
+    mock_refresh.assert_called_once()
 
 
 async def test_clear_timer_service_idempotent(hass: HomeAssistant, mock_client):
@@ -86,19 +93,25 @@ async def test_clear_timer_service_idempotent(hass: HomeAssistant, mock_client):
         patch(
             "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator.async_config_entry_first_refresh"
         ),
+        patch(
+            "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator.async_refresh"
+        ),
     ):
-        entry = MagicMock()
-        entry.data = {"host": "192.168.1.100"}
-        entry.entry_id = "test_entry"
+        # Create and add mock config entry
+        entry = MockConfigEntry(
+            domain=DOMAIN,
+            data={CONF_HOST: "192.168.1.100"},
+            entry_id="test_entry",
+        )
+        entry.add_to_hass(hass)
 
-        from custom_components.qstream import async_setup_entry
-
-        await async_setup_entry(hass, entry)
+        # Set up the integration
+        await hass.config_entries.async_setup(entry.entry_id)
         await hass.async_block_till_done()
 
-    # Call service multiple times
-    await hass.services.async_call(DOMAIN, "clear_timer", {}, blocking=True)
-    await hass.services.async_call(DOMAIN, "clear_timer", {}, blocking=True)
+        # Call service multiple times
+        await hass.services.async_call(DOMAIN, "clear_timer", {}, blocking=True)
+        await hass.services.async_call(DOMAIN, "clear_timer", {}, blocking=True)
 
     # Should succeed both times
     assert mock_client.cancel_timer.call_count == 2
