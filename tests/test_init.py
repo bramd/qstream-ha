@@ -51,6 +51,9 @@ async def test_clear_timer_service_calls_cancel(hass: HomeAssistant, mock_client
         patch(
             "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator.async_config_entry_first_refresh"
         ),
+        patch(
+            "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator._async_update_data"
+        ),
     ):
         # Create and add mock config entry
         entry = MockConfigEntry(
@@ -87,6 +90,9 @@ async def test_clear_timer_service_idempotent(hass: HomeAssistant, mock_client):
         ),
         patch(
             "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator.async_config_entry_first_refresh"
+        ),
+        patch(
+            "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator._async_update_data"
         ),
     ):
         # Create and add mock config entry
