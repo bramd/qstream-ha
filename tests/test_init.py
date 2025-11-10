@@ -52,8 +52,8 @@ async def test_clear_timer_service_calls_cancel(hass: HomeAssistant, mock_client
             "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator.async_config_entry_first_refresh"
         ),
         patch(
-            "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator._async_update_data"
-        ),
+            "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator.async_refresh"
+        ) as mock_refresh,
     ):
         # Create and add mock config entry
         entry = MockConfigEntry(
@@ -67,16 +67,18 @@ async def test_clear_timer_service_calls_cancel(hass: HomeAssistant, mock_client
         await hass.config_entries.async_setup(entry.entry_id)
         await hass.async_block_till_done()
 
-    # Call service
-    await hass.services.async_call(
-        DOMAIN,
-        "clear_timer",
-        {},
-        blocking=True,
-    )
+        # Call service
+        await hass.services.async_call(
+            DOMAIN,
+            "clear_timer",
+            {},
+            blocking=True,
+        )
 
     # Verify cancel_timer was called
     mock_client.cancel_timer.assert_called_once()
+    # Verify coordinator refresh was called
+    mock_refresh.assert_called_once()
 
 
 async def test_clear_timer_service_idempotent(hass: HomeAssistant, mock_client):
@@ -92,7 +94,7 @@ async def test_clear_timer_service_idempotent(hass: HomeAssistant, mock_client):
             "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator.async_config_entry_first_refresh"
         ),
         patch(
-            "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator._async_update_data"
+            "custom_components.qstream.coordinator.QStreamDataUpdateCoordinator.async_refresh"
         ),
     ):
         # Create and add mock config entry
@@ -107,9 +109,9 @@ async def test_clear_timer_service_idempotent(hass: HomeAssistant, mock_client):
         await hass.config_entries.async_setup(entry.entry_id)
         await hass.async_block_till_done()
 
-    # Call service multiple times
-    await hass.services.async_call(DOMAIN, "clear_timer", {}, blocking=True)
-    await hass.services.async_call(DOMAIN, "clear_timer", {}, blocking=True)
+        # Call service multiple times
+        await hass.services.async_call(DOMAIN, "clear_timer", {}, blocking=True)
+        await hass.services.async_call(DOMAIN, "clear_timer", {}, blocking=True)
 
     # Should succeed both times
     assert mock_client.cancel_timer.call_count == 2
