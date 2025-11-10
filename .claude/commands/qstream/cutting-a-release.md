@@ -65,10 +65,10 @@ fi
 ```
 
 **Version bump logic (Semantic Versioning):**
-- BREAKING CHANGE or exclamation mark in commit → **Major bump** (0.2.0 → 1.0.0)
-- feat: or feat(...) → **Minor bump** (0.2.0 → 0.3.0)
-- fix: → **Patch bump** (0.2.0 → 0.2.1)
-- Other (docs, chore, ci) → **Patch bump** (default)
+- BREAKING CHANGE or exclamation mark in commit = **Major bump** (0.2.0 to 1.0.0)
+- feat: or feat(...) = **Minor bump** (0.2.0 to 0.3.0)
+- fix: = **Patch bump** (0.2.0 to 0.2.1)
+- Other (docs, chore, ci) = **Patch bump** (default)
 
 **Present suggestion to user:**
 ```

@@ -1,0 +1,7 @@
+clear_timer:
+  name: Clear timer
+  description: >
+    Clears the active timer and returns the fan to its base program
+    (demand control/AQI regulation). This service is idempotent and
+    will succeed even if no timer is currently active.
+  fields: {}
