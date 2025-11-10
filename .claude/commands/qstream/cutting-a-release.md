@@ -36,10 +36,10 @@ git rev-list HEAD..origin/main --count  # Must be 0
 ```
 
 **If any check fails, STOP:**
-- Not on main → `git checkout main`
+- Not on main → git checkout main
 - Dirty working directory → Commit or stash changes first
 - CI failing → Fix issues before releasing
-- Behind origin → `git pull origin main`
+- Behind origin → git pull origin main
 
 **Never skip pre-checks to save time.** Dirty state mid-release wastes more time than upfront verification.
 
@@ -65,9 +65,9 @@ fi
 ```
 
 **Version bump logic (Semantic Versioning):**
-- `BREAKING CHANGE:` or `!` in commit → **Major bump** (0.2.0 → 1.0.0)
-- `feat:` or `feat(...)` → **Minor bump** (0.2.0 → 0.3.0)
-- `fix:` → **Patch bump** (0.2.0 → 0.2.1)
+- BREAKING CHANGE or exclamation mark in commit → **Major bump** (0.2.0 → 1.0.0)
+- feat: or feat(...) → **Minor bump** (0.2.0 → 0.3.0)
+- fix: → **Patch bump** (0.2.0 → 0.2.1)
 - Other (docs, chore, ci) → **Patch bump** (default)
 
 **Present suggestion to user:**
@@ -96,10 +96,10 @@ git log ${LAST_TAG}..HEAD --pretty=format:"%s|||%b"
 ```
 
 **Categorize:**
-- **Breaking Changes** - `BREAKING CHANGE:` in body or `!` after type
-- **Features** - `feat:` or `feat(...)`
-- **Bug Fixes** - `fix:` or `fix(...)`
-- **Documentation** - `docs:`
+- **Breaking Changes** - BREAKING CHANGE in body or exclamation mark after type
+- **Features** - feat: or feat(...)
+- **Bug Fixes** - fix: or fix(...)
+- **Documentation** - docs:
 - **Other** - Everything else (ci, chore, test, refactor)
 
 **Generate markdown:**
@@ -118,7 +118,7 @@ git log ${LAST_TAG}..HEAD --pretty=format:"%s|||%b"
 **Full Changelog**: https://github.com/bramd/qstream-ha/compare/v0.2.0...v0.3.0
 ```
 
-**Extract PR numbers:** Look for `(#123)` patterns in commit messages.
+**Extract PR numbers:** Look for (#123) patterns in commit messages.
 
 **Present to user:**
 ```
@@ -302,7 +302,7 @@ gh release create v0.3.0 --title "v0.3.0" --notes-file .release-notes.tmp
 | Skip pre-checks to "save time" | Pre-checks prevent mid-release failures. Always run. |
 | Publish without preview | Preview catches errors before they're public. Always show. |
 | Skip CHANGELOG.md | Users need release notes. Always update. |
-| Use lightweight tag | Use annotated tag (`-a`) for better metadata. |
+| Use lightweight tag | Use annotated tag (-a) for better metadata. |
 | Skip version override check | Duplicate tags cause errors. Always verify uniqueness. |
 
 ## Safety Guarantees
