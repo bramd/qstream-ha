@@ -61,7 +61,7 @@ class QStreamConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
             finally:
                 # Clean up client resources
-                if hasattr(client, 'close'):
+                if hasattr(client, "close"):
                     await client.close()
 
         # Show form

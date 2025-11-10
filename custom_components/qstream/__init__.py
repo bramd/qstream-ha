@@ -1,14 +1,16 @@
 """The QStream integration."""
 
+import asyncio
 import logging
 from datetime import timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from qstream import QStreamClient  # type: ignore[import-untyped,attr-defined]
+from qstream.exceptions import QStreamError  # type: ignore[import-untyped]
 
 from .const import CONF_HOST, DOMAIN, UPDATE_INTERVAL_SECONDS
 from .coordinator import QStreamDataUpdateCoordinator
@@ -16,6 +18,8 @@ from .coordinator import QStreamDataUpdateCoordinator
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [Platform.FAN, Platform.SENSOR, Platform.SWITCH]
+
+SERVICE_CLEAR_TIMER = "clear_timer"
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -40,6 +44,28 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
+    # Register services (only once for first entry)
+    if len(hass.data[DOMAIN]) == 1:
+
+        async def async_clear_timer(call: ServiceCall) -> None:
+            """Handle clear_timer service call."""
+            # Get all coordinators (handles multiple devices)
+            for coord in hass.data[DOMAIN].values():
+                if isinstance(coord, QStreamDataUpdateCoordinator):
+                    try:
+                        await coord.client.cancel_timer()
+                        # Small delay to let device process command
+                        await asyncio.sleep(0.5)
+                        await coord.async_refresh()
+                    except QStreamError as err:
+                        _LOGGER.error("Failed to clear timer: %s", err)
+
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_CLEAR_TIMER,
+            async_clear_timer,
+        )
+
     # Forward entry setup to platforms
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
@@ -50,5 +76,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
+
+        # Unregister services when last entry is removed
+        if not hass.data[DOMAIN]:
+            hass.services.async_remove(DOMAIN, SERVICE_CLEAR_TIMER)
 
     return unload_ok
